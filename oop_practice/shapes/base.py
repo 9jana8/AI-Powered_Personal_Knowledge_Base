@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 
 class Shape2D(ABC):
     @abstractmethod
-    def area(self):
+    def area(self) -> float:
         pass
 
     @abstractmethod
-    def corner_count(self):
+    def corner_count(self) -> int:
         pass
 
     def __repr__(self):
