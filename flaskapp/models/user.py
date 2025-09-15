@@ -1,6 +1,5 @@
 from flaskapp import db, login_manager
 from flask_login import UserMixin
-# UserMixin has default methods: is_authenticated, is_active, is_anonymous, get_id
 
 @login_manager.user_loader
 def load_user(user_id):
