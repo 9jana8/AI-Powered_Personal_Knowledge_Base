@@ -1,26 +1,14 @@
 from flask import render_template, url_for, redirect, flash
 from flaskapp import app, db, bcrypt
-from flaskapp.forms import RegistrationForm, LoginForm
+from flaskapp.forms import RegistrationForm, LoginForm, NoteForm
 from flaskapp.models import User, Note
 from flask_login import login_user, current_user, logout_user, login_required
-
-posts = [
-    {
-        'author': 'Author One',
-        'title': 'First Post',
-        'content': 'This is the content of the first post.',
-        'date_posted': 'April 20, 2024'},
-    {
-        'author': 'Author Two',
-        'title': 'Second Post',
-        'content': 'This is the content of the second post.',
-        'date_posted': 'April 21, 2024'}
-]
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', posts=posts)
+    notes = Note.query.all()
+    return render_template('home.html', posts=notes)
 
 @app.route('/about')
 def about():
@@ -64,3 +52,15 @@ def logout():
 @login_required
 def account():
     return render_template('account.html', title='Account')
+
+@app.route('/note/new', methods=['GET', 'POST'])
+@login_required
+def new_note():
+    form = NoteForm()
+    if form.validate_on_submit():
+        note = Note(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(note)
+        db.session.commit()
+        flash('Your note was created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('new_note.html', title='New Note', form=form)

@@ -13,5 +13,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     notes = db.relationship('Note', backref='author', lazy=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"User('{self.username}', '{self.email}')"
+    

@@ -9,5 +9,6 @@ class Note(db.Model, UserMixin):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Post('{self.title}', '{self.date_posted}')"
+    
