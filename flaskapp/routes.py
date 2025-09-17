@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, abort, request
 from flaskapp import app, db, bcrypt
 from flaskapp.forms import RegistrationForm, LoginForm, NoteForm
 from flaskapp.models import User, Note
@@ -8,7 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/home")
 def home():
     notes = Note.query.all()
-    return render_template('home.html', posts=notes)
+    return render_template('home.html', notes=notes)
 
 @app.route('/about')
 def about():
@@ -63,4 +63,39 @@ def new_note():
         db.session.commit()
         flash('Your note was created!', 'success')
         return redirect(url_for('home'))
-    return render_template('new_note.html', title='New Note', form=form)
+    return render_template('create_and_update_note.html', title='New Note', form=form, legend='Create a Note')
+
+@app.route('/note/<int:note_id>')
+@login_required
+def note(note_id):
+    note = Note.query.get_or_404(note_id)
+    return render_template('note.html', title=note.title, note=note)
+
+@app.route('/note/<int:note_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.author != current_user:
+        abort(403)
+    form = NoteForm()
+    if form.validate_on_submit():
+        note.title = form.title.data
+        note.content = form.content.data
+        db.session.commit()
+        flash('Your note was updated!', 'success')
+        return redirect(url_for('note', note_id=note.id))
+    elif request.method == 'GET':
+        form.title.data = note.title
+        form.content.data = note.content
+    return render_template('create_and_update_note.html', title='Update Note', form=form, legend='Update a Note')
+
+@app.route('/note/<int:note_id>/delete', methods=['POST'])
+@login_required
+def delete_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.author != current_user:
+        abort(403)
+    db.session.delete(note)
+    db.session.commit()
+    flash('Your note has been deleted!', 'success')
+    return redirect(url_for('home'))
