@@ -8,7 +8,7 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     notes = db.relationship('Note', backref='author', lazy=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"User('{self.username}', '{self.email}')"
     
 class Note(db.Model):
@@ -18,5 +18,6 @@ class Note(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Post('{self.title}', '{self.date_posted}')"
+    
