@@ -1,4 +1,7 @@
-from flaskapp import app
+from flaskapp import create_app
+
+# Create app
+app = create_app()
 
 # Run app
 if __name__ == '__main__':
