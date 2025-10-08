@@ -52,3 +52,17 @@ def delete_note(note_id):
     db.session.commit()
     flash('Your note has been deleted!', 'success')
     return redirect(url_for('main.home'))
+
+@notes.route('/notes')
+@login_required
+def list_notes():
+    query = request.args.get('q', '')
+    if query:
+        notes_list = Note.query.filter(
+            Note.author == current_user,
+            (Note.title.ilike(f'%{query}%')) | (Note.content.ilike(f'%{query}%'))
+        ).all()
+    else:
+        notes_list = Note.query.filter(Note.author == current_user).all()
+
+    return render_template('list_notes.html', notes=notes_list, query=query)

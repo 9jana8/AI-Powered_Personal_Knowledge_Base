@@ -12,4 +12,7 @@
           </div>
         </article>
     {% endfor %}
+    <div class="mt-4 text-center">
+        <a href="{{ url_for('notes.list_notes') }}" class="btn btn-outline-info btn-lg">Search Notes</a>
+    </div>
 {% endblock content %}
