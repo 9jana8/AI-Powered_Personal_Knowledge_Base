@@ -4,14 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flaskapp.config import Config
+from markupsafe import Markup
+import re
 
-# Initialize Flask app
+# Initialize Flask app extensions
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 
+# Creates and configures Flask app instance
 def create_app(config_class=Config):
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(Config)
@@ -32,4 +35,19 @@ def create_app(config_class=Config):
     app.register_blueprint(notes)
     app.register_blueprint(main)
     
+    app.jinja_env.filters['highlight'] = highlight_search
+
     return app
+
+# Helper function to highlight the text that matches a search query
+def highlight_search(text, query):
+    if not query:
+        return text
+    
+    pattern = re.compile(re.escape(query), re.IGNORECASE)
+
+    def replace_match(match):
+        return f"<mark>{match.group(0)}</mark>"
+
+    highlighted = pattern.sub(replace_match, text)
+    return Markup(highlighted)

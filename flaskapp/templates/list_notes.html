@@ -20,7 +20,7 @@
             {% for note in notes %}
                 <li class="list-group-item">
                     <a href="{{ url_for('notes.note', note_id=note.id) }}">{{ note.title }}</a>
-                    <p class="mb-1 text-muted">{{ note.content[:100] }}...</p>
+                    <p class="mb-1 text-muted">{{ note.content | highlight(query) | safe }}</p>
                     <div>
                         <a href="{{ url_for('notes.update_note', note_id=note.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                         <form action="{{ url_for('notes.delete_note', note_id=note.id) }}" method="POST" style="display:inline;">

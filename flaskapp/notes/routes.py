@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, flash, abort, request, Blueprint
-from flaskapp import db
+from flaskapp import db, highlight_search
 from flaskapp.notes.forms import NoteForm
 from flaskapp.models import Note
 from flask_login import current_user, login_required
@@ -65,4 +65,14 @@ def list_notes():
     else:
         notes_list = Note.query.filter(Note.author == current_user).all()
 
-    return render_template('list_notes.html', notes=notes_list, query=query)
+    highlighted_notes = []
+    for note in notes_list:
+        highlighted_note = Note(
+            id=note.id,
+            title=highlight_search(note.title, query),
+            content=highlight_search(note.content, query),
+            user_id=note.user_id,
+            date_posted=note.date_posted
+        )
+        highlighted_notes.append(highlighted_note)
+    return render_template('list_notes.html', notes=highlighted_notes, query=query)
