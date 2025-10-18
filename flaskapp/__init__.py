@@ -26,14 +26,17 @@ def create_app(config_class=Config):
     with app.app_context():
         from flaskapp.models import User
         from flaskapp.models import Note
+        from flaskapp.models import Document
         db.create_all()
 
     from flaskapp.users.routes import users
     from flaskapp.notes.routes import notes
     from flaskapp.main.routes import main
+    from flaskapp.uploads.routes import uploads
     app.register_blueprint(users)
     app.register_blueprint(notes)
     app.register_blueprint(main)
+    app.register_blueprint(uploads)
     
     app.jinja_env.filters['highlight'] = highlight_search
 

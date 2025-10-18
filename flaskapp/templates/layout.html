@@ -46,7 +46,7 @@
             </nav>
 
     </header>
-    <main role="main", class="container">
+    <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -60,15 +60,40 @@
             </div>
             <div class="col-md-4">
                 <div class="content-section">
-                    <h5>Sidebar</h5>
-                    <p class="'text-muted'">Welcome! Feel free to share your thoughts. :)
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-light">Latest Post</li>
-                            <li class="list-group-item list-group-item-light">Announcements</li>
-                        </ul>
-                    </p>
+                    <h5>Documents</h5>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('uploads.upload_file') }}" class="btn btn-outline-info btn-block">Upload</a>
+
+                        <hr>
+
+                        <h6>Uploaded Documents</h6>
+                        {% if documents %}
+                            <ul class="list-group">
+                                {% for doc in documents %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ doc.filename }}
+                                        <span class="badge badge-pill 
+                                            {% if doc.status == 'QUEUED' %}badge-warning
+                                            {% elif doc.status == 'PROCESSING' %}badge-info
+                                            {% elif doc.status == 'INDEXED' %}badge-success
+                                            {% elif doc.status == 'FAILED' %}badge-danger
+                                            {% else %}badge-secondary{% endif %}">
+                                            {{ doc.status }}
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No documents uploaded yet.</p>
+                        {% endif %}
+                    {% else %}
+                        <p>Want to upload documents? <a href="{{ url_for('users.login') }}" class="btn btn-outline-primary btn-block">Login to Upload</a></p>
+                    {% endif %}
+
                 </div>
             </div>
+
+
         </div>
     </main>
 
