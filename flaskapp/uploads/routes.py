@@ -5,11 +5,17 @@ from flaskapp.models import Document
 import os, secrets
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
+from werkzeug.exceptions import RequestEntityTooLarge
 
 
 uploads = Blueprint('uploads', __name__)
 
 ALLOWED_EXTENSIONS = {'pdf', 'txt', 'md'}  # set (vs list, vs dict)
+
+@uploads.errorhandler(RequestEntityTooLarge)
+def handle_large_file(e):
+    flash('File is too large! Maximum allowed size is 10 MB.', 'danger')
+    return redirect(url_for('uploads.upload_file'))
 
 def allowed_file(filename: str) -> bool:
     good_extension = filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

@@ -18,6 +18,7 @@ login_manager.login_message_category = 'info'
 def create_app(config_class=Config):
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(Config)
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
     db.init_app(app)
     bcrypt.init_app(app)
