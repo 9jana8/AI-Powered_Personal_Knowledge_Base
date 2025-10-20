@@ -1,105 +1,96 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
-        {% if title %}
-            <title>{{ title }} - AI-Powered Personal Knowledge Base</title>
-        {% else %}
-            <title>AI-Powered Personal Knowledge Base</title>
-        {% endif %}
-    </head>
-    <body>
-        <header class="site-header">
-            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url_for('main.home') }}">AI-Powered Personal Knowledge Base</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+    <title>
+      {% if title %}
+        {{ title }} - AI-Powered Personal Knowledge Base
+      {% else %}
+        AI-Powered Personal Knowledge Base
+      {% endif %}
+    </title>
+  </head>
 
-                    <div class="collapse navbar-collapse" id="navbarToggle">
-                        <div class="navbar-nav mr-auto">
-                            <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
-                            <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
-                        </div>
-                        <!-- Navbar Right Side -->
-                        <div class="navbar-nav">
-                            {% if current_user.is_authenticated %}
-                                <a class="nav-item nav-link" href="{{ url_for('notes.new_note') }}">New Note</a>
-                                <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
-                                <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
-                            {% else %}
-                                <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
-                                <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="{{ url_for('main.home') }}">
+            AI-Powered Personal Knowledge Base
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-    </header>
-    <main role="main" class="container">
-        <div class="row">
-            <div class="col-md-8">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-               {% block content %}{% endblock %} 
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav me-auto">
+              <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
             </div>
-            <div class="col-md-4">
-                <div class="content-section">
-                    <h5>Documents</h5>
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('uploads.upload_file') }}" class="btn btn-outline-info btn-block">Upload</a>
-
-                        <hr>
-
-                        <h6>Uploaded Documents</h6>
-                        {% if documents %}
-                            <ul class="list-group">
-                                {% for doc in documents %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ doc.filename }}
-                                        <span class="badge badge-pill 
-                                            {% if doc.status == 'QUEUED' %}badge-warning
-                                            {% elif doc.status == 'PROCESSING' %}badge-info
-                                            {% elif doc.status == 'INDEXED' %}badge-success
-                                            {% elif doc.status == 'FAILED' %}badge-danger
-                                            {% else %}badge-secondary{% endif %}">
-                                            {{ doc.status }}
-                                        </span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>No documents uploaded yet.</p>
-                        {% endif %}
-                    {% else %}
-                        <p>Want to upload documents? <a href="{{ url_for('users.login') }}" class="btn btn-outline-primary btn-block">Login to Upload</a></p>
-                    {% endif %}
-
-                </div>
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{ url_for('notes.new_note') }}">New Note</a>
+                <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
+              {% endif %}
             </div>
-
-
+          </div>
         </div>
+      </nav>
+    </header>
+
+    <main role="main" class="container mt-5 pt-4">
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          {% block content %}{% endblock %}
+        </div>
+
+        <div class="col-md-4">
+          <div class="content-section p-3 bg-light rounded shadow-sm">
+            <h5>Documents</h5>
+            {% if current_user.is_authenticated %}
+              <button type="button" class="btn btn-outline-info w-100 mb-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                Upload
+              </button>
+              <hr>
+            {% else %}
+              <p>
+                Want to upload documents?
+                <a href="{{ url_for('users.login') }}" class="btn btn-outline-primary w-100">Login to Upload</a>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </main>
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    </body>      
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global modal placeholder -->
+    {% if form is defined and form is not none and 'file' in form %}
+        {% include "upload_modal.html" %}
+    {% endif %}
+  </body>
 </html>
