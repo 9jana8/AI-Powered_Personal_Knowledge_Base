@@ -1,0 +1,23 @@
+<form method="POST" action="{{ url_for('uploads.upload_file') }}" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+  <fieldset class="form-group">
+    <div class="form-group mb-3">
+      {{ form.file.label(class="form-label") }}
+      {% if form.file.errors %}
+        {{ form.file(class="form-control is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.file.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        {{ form.file(class="form-control") }}
+      {% endif %}
+    </div>
+
+    <div class="text-end">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+  </fieldset>
+</form>
+
