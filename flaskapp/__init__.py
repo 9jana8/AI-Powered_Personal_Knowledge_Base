@@ -6,8 +6,10 @@ from flask_login import LoginManager
 from flaskapp.config import Config
 from markupsafe import Markup
 import re
+from dotenv import load_dotenv
 
 # Initialize Flask app extensions
+load_dotenv()
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
