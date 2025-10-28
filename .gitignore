@@ -1,23 +1,42 @@
+# ====================================
 # Python
+# ====================================
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Virtual environments
 env/
 venv/
 .venv/
+# Custom venv (e.g. created via `python -m venv jana`)
+/jana/
 
+# ====================================
 # Flask / general
+# ====================================
 instance/
 *.sqlite3
+*.db
 *.log
 
-# IDEs
+# ====================================
+# IDE / Editor files
+# ====================================
 .vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
 
-# OS files
+# ====================================
+# OS-specific files
+# ====================================
 .DS_Store
 Thumbs.db
+
+# ====================================
+# Miscellaneous
+# ====================================
+*.bak
+*.tmp
